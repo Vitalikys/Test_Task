@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %} Login {% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center;">
+    <div class="list-group col-md-3" >
+
+    <h4> Login </h4>
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group ">
+            <label for="username_id_" class="col-sm-2 col-form-label">Username:</label>
+            <input class="form-control" type="text" name="username" id='username_id_' placeholder="Username">
+        </div>
+        <div class="form-group">
+            <label for="pass_id_" class="col-sm-2 col-form-label">Password:</label>
+            <input class="form-control" type="password" name="password" id='pass_id_' placeholder="Password">
+        </div>
+
+        <button type='submit'  class="btn btn-primary float-right"> login</button>
+    </form>
+</div>
+
+
+</div>
+
+{% endblock %}
