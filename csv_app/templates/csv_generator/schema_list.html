@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %} All Schemas {% endblock %}
+
+{% block content %}
+
+<div class="col-md-8" style="margin-left: auto; margin-right: auto">
+    <h3>Data Schemas</h3>
+    <table class="table table-striped">
+
+        <thead class="border-bottom font-weight-bold">
+        <tr>
+            <th scope="col" style="width: 20px">#</th>
+            <th scope="col" style="width: 20px">Title</th>
+            <th scope="col" style="width: 20px">Modified</th>
+            <th scope="col" style="width: 20px">Actions</th>
+        </tr>
+        </thead>
+
+        {% for item in object_list %}
+        <tr>
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.modifies}}</td>
+            <td><a href="#">Edit</a></td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <a href="{% url 'add_schema' %} ">
+        <button type='submit' class="btn btn-outline-info"> New Schema</button>
+    </a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>create schema </h2>
+<form method="post" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br/>
+    <button type="submit" class="btn btn-success">Створити</button>
+</form>
+
+
+{% endblock %}
