@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="col-md-8" style="margin-left: auto; margin-right: auto">
-    <h3>Data Schemas</h3>
+    <h3>My Data Schemas</h3>
     <table class="table table-striped">
 
         <thead class="border-bottom font-weight-bold">
@@ -21,7 +21,10 @@
             <td>{{item.id}}</td>
             <td>{{item.name}}</td>
             <td>{{item.modifies}}</td>
-            <td><a href="#">Edit</a></td>
+            <td>
+                <a href="{% url 'edit_schema' item.pk %}">Edit</a>
+                <a href="{% url 'del_schema' item.pk %}" style="color:red;  margin-left: 25px;">Delete</a>
+            </td>
         </tr>
         {% endfor %}
 

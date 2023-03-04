@@ -1,17 +1,13 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-COLUMN_SEPARATOR=(
+COLUMN_SEPARATOR = (
     (";", 'Semicolon ;'),
     (",", 'Comma ,'),
 )
-STR_CHARACTER=(
+STR_CHARACTER = (
     ("'", "Single-quote '"),
     ("\"", "Double-quote \""),
-)
-COLUMNS=(
-    ('Job'),
-    ('Email'),
 )
 
 
@@ -27,16 +23,16 @@ class Schema(models.Model):
     # Schemas columns, we create only names for columns
     full_name = models.CharField(max_length=30, blank=True, null=True)
     age = models.CharField(max_length=20, blank=True, null=True)
-    job = models.CharField(max_length=20,  blank=True, null=True)
+    job = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} - {self.name}"
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}(id={self.id})'
+
 # class Column(models.Model):
 #     schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
 #     title = models.CharField(choices=COLUMNS)
-
-# class Column(models.Model):
 #     full_name = models.CharField(max_length=30, )
 #     age = models.PositiveIntegerField(max_length=2)
-#     asaa = models.Man

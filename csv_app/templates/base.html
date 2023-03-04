@@ -20,14 +20,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" href="">FakeCSV</a>
+                <a class="nav-link" style="font-weight:bold" href="">FakeCSV</a>
                 <a class="nav-link" href="{% url 'schemas' %}">Schemas</a>
-
-
             </div>
-
-
         </div>
+
         <span class="navbar-text" align="right">
             <!--                 if us_active.is_active -->
             {% if request.user.is_authenticated %}
@@ -36,7 +33,6 @@
                 <a href="{% url 'login_url' %}">Login</a>
             {% endif %}
         </span>
-
 
     </div>
 </nav>
