@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 COLUMN_SEPARATOR = (
     (";", 'Semicolon ;'),
@@ -22,17 +23,40 @@ class Schema(models.Model):
 
     # Schemas columns, we create only names for columns
     full_name = models.CharField(max_length=30, blank=True, null=True)
-    age = models.CharField(max_length=20, blank=True, null=True)
     job = models.CharField(max_length=20, blank=True, null=True)
+    email = models.CharField(max_length=20, blank=True, null=True)
+    domain_name = models.CharField(max_length=20, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    company = models.CharField(max_length=20, blank=True, null=True)
+    text = models.CharField(max_length=20, blank=True, null=True)
+    integer_num = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=20, blank=True, null=True)
+    date_fake = models.CharField(max_length=20, blank=True, null=True)
 
+    min_value_int = models.IntegerField(null=True, blank=True)
+    max_value_int = models.IntegerField(null=True, blank=True)
     def __str__(self):
         return f"{self.user} - {self.name}"
+
+    def get_absolute_url(self):
+        return reverse('detail_schema', kwargs={'pk': self.pk})
 
     def __repr__(self):
         return f'{self.__class__.__name__}(id={self.id})'
 
+
 # class Column(models.Model):
+#     """ Schemas columns model, we create only names for columns """
 #     schema = models.ForeignKey(Schema, on_delete=models.CASCADE)
-#     title = models.CharField(choices=COLUMNS)
-#     full_name = models.CharField(max_length=30, )
-#     age = models.PositiveIntegerField(max_length=2)
+#     full_name = models.CharField(max_length=30, blank=True, null=True)
+#     job = models.CharField(max_length=20, blank=True, null=True)
+#     email = models.CharField(max_length=20, blank=True, null=True)
+#     domain_name = models.CharField(max_length=20, blank=True, null=True)
+#     phone_number = models.CharField(max_length=20, blank=True, null=True)
+#     company = models.CharField(max_length=20, blank=True, null=True)
+#     text = models.CharField(max_length=20, blank=True, null=True)
+#     integer_num = models.CharField(max_length=20, blank=True, null=True)
+#     address = models.CharField(max_length=20, blank=True, null=True)
+#     date_fake = models.CharField(max_length=20, blank=True, null=True)
+#     min_value_int = models.IntegerField(null=True, blank=True)
+#     max_value_int = models.IntegerField(null=True, blank=True)

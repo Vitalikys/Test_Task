@@ -19,10 +19,11 @@
         {% for item in object_list %}
         <tr>
             <td>{{item.id}}</td>
-            <td>{{item.name}}</td>
+            <td><a href="{{ item.get_absolute_url }}">{{item.name}}</a></td>
             <td>{{item.modifies}}</td>
             <td>
                 <a href="{% url 'edit_schema' item.pk %}">Edit</a>
+                <a href="{% url 'generate_csv' item.pk %}">generate</a>
                 <a href="{% url 'del_schema' item.pk %}" style="color:red;  margin-left: 25px;">Delete</a>
             </td>
         </tr>
