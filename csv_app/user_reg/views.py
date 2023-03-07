@@ -5,7 +5,7 @@ from .models import UserLoginForm
 
 
 def homepage(request):
-    return render(request, template_name='base.html')
+    return render(request, template_name='home.html')
 
 
 def user_login(request):

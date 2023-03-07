@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  web:
+    container_name: app_csv_generator
+    build: .
+    ports:
+      - "8006:8006"
+    command: sh -c "python3 manage.py migrate &&
+        python3 manage.py runserver 8006"
+    restart: always
+

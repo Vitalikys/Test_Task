@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<div style="margin-left: 80px; margin-right: 80px;" class="col-md-9">
+
+    <h3> The Challenge Test Task </h3>
+    <h5> Build an online service for generating CSV files with fake (dummy) data using
+        Python and Django: </h5>
+
+    <ul>
+        <li>Any user can log in to the system with a username and password. You can
+            use generic views provided by Django to implement these features.
+            Registering new users via the admin interface is enough. Note, that you
+            do not need to implement a user profile interface to support password
+            change or similar functionality.
+        </li>
+
+        <li> Any logged-in user can create any number of data schemas to create
+            datasets with fake data.
+        </li>
+
+        <li> Each such data schema has a name and a list of columns with names and
+            specified data types.
+        </li>
+    </ul>
+    <br>
+    <h5>Проблеми з якими я стикнувся при виконанні проекту і не вирішив (покищо):</h5>
+    <ul>
+        <li>implementation AJAX:  я не використовував AJAX до цього проекту взвгалі,
+            тому і не получилося мені його прописати. Покищо...
+            Це повпливало на наступні кроки:
+            <ul>
+                <li> Вся Форма колонок надана повністю, порожні поля ігноруються і не створюються. </li>
+                <li>Нема одиночної форми на додавання колонок-different types of data  </li>
+            </ul>
+
+        </li>
+        <li>Зроблений Деплой Проекта не в PythonAnywhere. (Розгорнуто в контейнері Docker)</li>
+        <li> Зберігання .csv файла працює некоректно (через Google Chrome) пропонує зберегти файл в html. </li>
+
+
+    </ul>
+</div>
+{% endblock %}
