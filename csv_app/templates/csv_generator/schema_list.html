@@ -23,7 +23,6 @@
             <td>{{item.modifies}}</td>
             <td>
                 <a href="{% url 'edit_schema' item.pk %}">Edit</a>
-                <a href="{% url 'generate_csv' item.pk %}">generate</a>
                 <a href="{% url 'del_schema' item.pk %}" style="color:red;  margin-left: 25px;">Delete</a>
             </td>
         </tr>

@@ -1,10 +1,13 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView
 from django.views.generic.edit import FormMixin
 
-from .forms import SchemaForm
-from .models import Schema
+from .forms import SchemaForm, ColumnForm, RowsForm
+from .models import Schema, Column, DataSet
+from .services import csv_generator
 
 
 class SchemasView(ListView):
@@ -16,29 +19,30 @@ class SchemasView(ListView):
 
 
 # class CreateSchema(CreateView):
-#     form_class = SchemaForm
+#     form_class = SchemaForm, ColumnForm
 #     template_name = 'csv_generator/schema_create.html'
 @login_required(login_url='login_url')
 def create_schema(request):
     if request.method == 'POST':
-        form = SchemaForm(request.POST)
-        if form.is_valid():
-            schema = form.save(commit=False)
+        form_schema = SchemaForm(request.POST)
+        if form_schema.is_valid():
+            schema = form_schema.save(commit=False)
             schema.user = request.user
             schema.save()
-            # print('schema-dict: ', schema.__dict__)
-            # new_schema = Schema(name=schema.name,
-            #                     separator=schema.separator,
-            #                     string_character=schema.string_character,
-            #                     user= request.user,
-            #                     full_name=schema.full_name,
-            #                     age=schema.age,
-            #                     job=schema.job)
-            # new_schema.save()
-            return redirect('schemas')
+        form_column = ColumnForm(request.POST)
+        if form_column.is_valid():
+            columns = form_column.save(commit=False)
+            columns.schema = schema
+            columns.save()
+        return redirect('schemas')
     else:
-        form = SchemaForm()
-    return render(request, 'csv_generator/schema_create.html', {'form': form})
+        form_schema = SchemaForm()
+        form_column = ColumnForm()
+        context = {
+            'form_schema': form_schema,
+            'form_column': form_column
+        }
+    return render(request, 'csv_generator/schema_create.html', context=context)
 
 
 @login_required(login_url='login_url')
@@ -54,38 +58,52 @@ def delete_schema(request, schema_id):
 def edit_schema(request, schema_id=None):
     if schema_id:
         schema = Schema.objects.get(pk=schema_id)
-        print('schema', schema)
+        column_obj = Column.objects.get(schema=schema_id)
     form = SchemaForm(request.POST or None, instance=schema)
+    form_column = ColumnForm(instance=column_obj)
+    context = {
+        'form': form,
+        'form_column': form_column
+    }
+
     if request.POST and form.is_valid():
         form.save()
         # Save was successful, so redirect to another page
         return redirect('schemas')
-    return render(request, 'csv_generator/schema_edit.html', {'form': form})
+    return render(request, 'csv_generator/schema_edit.html', context=context)
 
 
-def generate_csv(request, schema_id):
-    schema = Schema.objects.get(pk=schema_id)
-
-    # Select -> save columns names to variable 'csv_columns'
-    csv_columns = {}
-    my_keys = ['full_name', 'integer_num', 'job', 'email', 'domain_name',
-               'phone_number', 'company', 'text', 'address', 'date_fake']
-    for k, v in schema.__dict__.items():
-        if k in my_keys and v:
-            csv_columns[k] = v     # print('csv_columns = ', csv_columns)
-
-    from .services.csv_generator import create_csv
-    create_csv(csv_columns, schema, rows_count=10)
-
-    return redirect('schemas')
+def is_ajax(request):
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
 
-class SchemaDetailView(DetailView):
+class SchemaDetailView(DetailView, FormMixin):
     model = Schema
-    # form_class = RowsForm
+    form_class = RowsForm
     template_name = 'csv_generator/schema_detail.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def post(self, request, *args, **kwargs):
+        schema = self.get_object()
 
+        # create DataSet, Get Rows count from Form
+        dataset_obj = DataSet.objects.create(schema=schema, rows=request.POST['rows'])
+
+        # get column object and filter them from empty values
+        column_obj = Column.objects.get(schema=schema)
+        csv_columns = csv_generator.generate_dict_values(column_obj)
+        csv_generator.create_csv(csv_columns, schema, dataset_obj, column_obj)
+        dataset_obj.status = 1
+        dataset_obj.save()
+        return redirect('detail_schema', schema.id)
+
+    def get_context_data(self, **kwargs):
+        from .services.csv_generator import generate_dict_values
+        context = super().get_context_data(**kwargs)
+
+        # get all DataSets for html template
+        context['datasets'] = DataSet.objects.filter(schema=self.get_object())
+
+        # get dictionary with filtered columns
+        column_obj = Column.objects.get(schema=self.get_object())
+        context['columns_filtered'] = csv_generator.generate_dict_values(column_obj)
+        return context

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="justify-content: center; margin-left: 35px" class="container-sm">
+    <div class="list-group col-md-10" style="justify-content: center;">
+
+        <h2>Sample schema:
+            <span style="font-weight: lighter">{{schema.name}} </span>
+            <a href="{% url 'edit_schema' schema.pk %}">Edit</a>
+        </h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Column Name</th>
+                <th>Column Type</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for k, v in columns_filtered.items %}
+            {# {'full_name': 'name_column', 'job': 'Jobs_col', 'email': 'mail_col'} #}
+                <tr>
+                    <td> {{ forloop.counter }} </td>
+                    <td>{{v}}</td>
+                    <td>{{k}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+
+        <h2>Data sets</h2>
+        <form method="post" id="upload_form" class="d-inline-flex" style="max-width:350px">
+            {% csrf_token %}
+            {{ form.rows }}
+
+            <button type="submit" class="btn btn-primary" style="height:40px">Generate_csv</button>
+        </form>
+
+        <br>
+        <table class="table table-bordered w-60" style="margin-left: 35px">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Created</th>
+                <th scope="col">Rows</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in datasets %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.created_at }}</td>
+                <td>{{ item.rows }}</td>
+
+                {% if item.status == 1 %}
+                <td><span class="badge text-bg-success">Success</span></td>
+                <td><a href="{{ item.file_download }}" download class="btn btn-link">Download</a></td>
+                {% else %}
+                <td><span class="badge text-bg-secondary">Processing...</span></td>
+                {% endif %}
+
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+{% endblock %}

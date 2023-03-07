@@ -10,6 +10,4 @@ urlpatterns = [
     path('schema_del/<int:schema_id>/', delete_schema, name='del_schema'),
     path('<int:pk>/', SchemaDetailView.as_view(), name='detail_schema'),
     path('schema_edit/<int:schema_id>/', edit_schema, name='edit_schema'),
-    path('generate_csv/<int:schema_id>/', generate_csv, name='generate_csv'),
-
 ]

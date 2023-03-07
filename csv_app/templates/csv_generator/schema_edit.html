@@ -10,6 +10,8 @@
 
             {% csrf_token %}
             {{ form.as_p }}
+            <h2>Edit Column Titles:</h2>
+            {{ form_column.as_p }}
             <br/>
             <button type="submit" class="btn btn-success">Редагувати</button>
         </form>
