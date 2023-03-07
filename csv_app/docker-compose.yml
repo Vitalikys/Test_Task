@@ -5,7 +5,7 @@ services:
     build: .
     ports:
       - "8006:8006"
-    command: sh -c "python3 manage.py migrate &&
-        python3 manage.py runserver 8006"
+    command: sh -c "python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8006"
     restart: always
 
