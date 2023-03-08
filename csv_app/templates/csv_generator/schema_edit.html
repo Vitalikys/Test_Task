@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Edit Schema
+{% endblock %}
 
 {% block content %}
 
@@ -11,7 +16,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <h2>Edit Column Titles:</h2>
-            {{ form_column.as_p }}
+            {{ form_column|crispy }}
             <br/>
             <button type="submit" class="btn btn-success">Редагувати</button>
         </form>
