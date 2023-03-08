@@ -15,4 +15,7 @@ open bash in running container:
 docker exec -it app_csv_generator  bash
 ```
 
-
+start Tests:
+```shell
+./manage.py test
+```

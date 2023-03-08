@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView
 from django.views.generic.edit import FormMixin
-
+from django.http import HttpResponseBadRequest
 from .forms import SchemaForm, ColumnForm, RowsForm
 from .models import Schema, Column, DataSet
 from .services import csv_generator
@@ -25,15 +25,17 @@ class SchemasView(ListView):
 def create_schema(request):
     if request.method == 'POST':
         form_schema = SchemaForm(request.POST)
-        if form_schema.is_valid():
+        form_column = ColumnForm(request.POST)
+        if form_schema.is_valid() and form_column.is_valid():
             schema = form_schema.save(commit=False)
             schema.user = request.user
             schema.save()
-        form_column = ColumnForm(request.POST)
-        if form_column.is_valid():
+
             columns = form_column.save(commit=False)
             columns.schema = schema
             columns.save()
+        else:
+            return HttpResponseBadRequest('Schema with such name Already Exist')
         return redirect('schemas')
     else:
         form_schema = SchemaForm()
@@ -48,7 +50,8 @@ def create_schema(request):
 @login_required(login_url='login_url')
 def delete_schema(request, schema_id):
     try:
-        obj = Schema.objects.get(pk=schema_id)
+        obj = get_object_or_404(Schema, pk=schema_id)
+        # obj = Schema.objects.get(pk=schema_id)
         obj.delete()
         return redirect('schemas')
     except:

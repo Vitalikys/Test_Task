@@ -4,6 +4,15 @@ from .models import Schema, Column, DataSet
 
 
 class SchemaForm(forms.ModelForm):
+    def clean_name(self):
+        from django.core.exceptions import ValidationError
+        new_name_schema = self.cleaned_data.get("name")
+        if Schema.objects.filter(name=new_name_schema):
+            raise ValidationError(f"Schema name {new_name_schema} already exists")
+        return new_name_schema
+
+    #         self.add_error('name', 'sdds')
+    #         raise forms.ValidationError('The Schema name [%s] already exists' % new_name_schema)
     class Meta:
         model = Schema
         fields = 'name', 'separator', 'string_character'
@@ -29,8 +38,8 @@ class ColumnForm(forms.ModelForm):
 class RowsForm(forms.ModelForm):
     class Meta:
         model = DataSet
-        fields = ('rows', )
+        fields = ('rows',)
         widgets = {
             'rows': forms.NumberInput(attrs={'class': 'form-control',
-                                           "placeholder": "number rows"}),
+                                             "placeholder": "number rows"}),
         }
