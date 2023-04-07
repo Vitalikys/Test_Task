@@ -1,8 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
 from django.http import HttpResponseBadRequest
 from .forms import SchemaForm, ColumnForm, RowsForm
@@ -100,7 +98,6 @@ class SchemaDetailView(DetailView, FormMixin):
         return redirect('detail_schema', schema.id)
 
     def get_context_data(self, **kwargs):
-        from .services.csv_generator import generate_dict_values
         context = super().get_context_data(**kwargs)
 
         # get all DataSets for html template
